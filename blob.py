@@ -8,6 +8,8 @@ import numpy as np
 import datetime
 import pickle
 import sklearn
+import sklearn.metrics
+print(dir(sklearn.metrics))
 st.write("Scikit-learn version:", sklearn.__version__)
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split, RandomizedSearchCV

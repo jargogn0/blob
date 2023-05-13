@@ -2,6 +2,10 @@ import streamlit as st
 
 # Must be the first Streamlit command
 st.set_page_config(page_title="Jargoñ Neural Network", page_icon=":spider:", layout="wide")
+st.title("Hydrological Modelling :green[App] :bar_chart:")
+    st.subheader("Developed by Jargoñ :spider:")
+    st.write("This application accepts a dataset with hydrological data, performs data cleaning and exploration, and builds several predictive models to forecast the 'Discharge' variable.")
+
 
 import pandas as pd
 import numpy as np
@@ -271,10 +275,7 @@ else:
     st.write("Please upload data before running Model 2.")
 
 def main():
-    st.title("Hydrological Modelling :green[App] :bar_chart:")
-    st.subheader("Developed by Jargoñ :spider:")
-    st.write("This application accepts a dataset with hydrological data, performs data cleaning and exploration, and builds several predictive models to forecast the 'Discharge' variable.")
-
+    
      # Ask the user for the catchment name and area
     catchment_name = st.text_input('Enter the catchment name:')
     catchment_area = st.number_input('Enter the catchment area in Km2:', min_value=0.0, step=0.1)

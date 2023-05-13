@@ -91,7 +91,7 @@ st.sidebar.title("Contact")
 st.sidebar.info(
     """
     Qiusheng Wu: <https://wetlands.io>
-    [GitHub](https://github.com/giswqs) | [Twitter](https://twitter.com/giswqs) | [YouTube](https://www.youtube.com/c/QiushengWu) | [LinkedIn](https://www.linkedin.com/in/qiushengwu)
+    [GitHub](https://github.com/jargon0)
     """
 )
 

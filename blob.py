@@ -275,6 +275,9 @@ else:
     st.write("Please upload data before running Model 2.")
 
 def main():
+    st.subheader("Model1 Data - Runoff prediction:spider:")
+    st.write("This application accepts a dataset with hydrological data, performs data cleaning and exploration, and builds several predictive models to forecast the 'Discharge' variable.")
+
     
      # Ask the user for the catchment name and area
     catchment_name = st.text_input('Enter the catchment name:')

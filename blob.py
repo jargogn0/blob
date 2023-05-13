@@ -130,7 +130,7 @@ def main():
     else:
         # If the user does not upload their own training data, use your training data
         # If the user does not upload their own training data, use the default training data
-        data = pd.read_excel('/Users/dbcooper/Downloads/jargon/sn_river_data.xlsx')
+        data = pd.read_excel('/sn_river_data.xlsx')
         data_copy=data.copy()
 
     if uploaded_file_val is not None:

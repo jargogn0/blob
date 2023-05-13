@@ -5,4 +5,4 @@ matplotlib
 scikit-learn>=0.24.1
 seaborn
 streamlit-lottie
-
+sklearn

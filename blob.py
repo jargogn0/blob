@@ -430,8 +430,6 @@ def get_table_download_link(df, filename):
     return href
 
 
-
-
 st.subheader('Model 1 - Predicting Next Rainfall and Flood Risk')
 
 uploaded_file_2 = st.file_uploader("Choose a new TRAINING csv or Excel file for MODEL 1", type=['csv', 'xlsx'])

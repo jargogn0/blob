@@ -140,7 +140,7 @@ def main():
 
 
     # Add a button to run the model
-    run_model = st.button("Run Model 1")
+    run_model = st.button("Run Model 2")
 
     if run_model:
 
@@ -434,7 +434,7 @@ def get_table_download_link(df, filename):
 
 st.subheader('Model 1 - Predicting Next Rainfall and Flood Risk')
 
-uploaded_file_2 = st.file_uploader("Choose a new TRAINING csv or Excel file for MODEL 2", type=['csv', 'xlsx'])
+uploaded_file_2 = st.file_uploader("Choose a new TRAINING csv or Excel file for MODEL 1", type=['csv', 'xlsx'])
 
 if uploaded_file_2 is not None:
     try:
@@ -451,7 +451,7 @@ else:
     st.write(data.head())
 
 # Upload the data for Model 2
-file_upload_2 = st.file_uploader("Upload data for Model 2", type=["csv", "xlsx"])
+file_upload_2 = st.file_uploader("Upload data for Model 1", type=["csv", "xlsx"])
 
 if file_upload_2:
     if file_upload_2.type == "text/csv":
@@ -462,10 +462,10 @@ if file_upload_2:
         st.write("Please upload a valid file format.")
 
 # Add a button to run Model 1
-if 'run_model_2' not in st.session_state:
+if 'run_model_1' not in st.session_state:
     st.session_state['run_model_1'] = False
 
-if st.button("Run Model2"):
+if st.button("Run Model 1"):
     st.session_state.run_model_1 = True
 
 if st.session_state.run_model_1 and file_upload_2:

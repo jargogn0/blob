@@ -248,66 +248,42 @@ def main():
 
             # Continue this way for the rest of your plots...
 
+            # Refresh columns
+            col1, col2 = st.beta_columns(2)
 
-            st.write(data_copy.head())
-            st.write(data.head())
+            # Display data
+            col1.write(data_copy.head())
+            col2.write(data.head())
 
             if 'Date' in data_copy.columns:
                 data['Year'] = pd.to_datetime(data_copy['Date']).dt.year
 
             # Plot calculated vs USGS annual max flow values
-            st.subheader('Annual Maxima - USGS Peak Flow vs Daily Calculated')
-            fig, ax = plt.subplots(figsize=(6, 4))
-
-            ax.plot(data['Year'],
-                    data['Runoff (mm)'],
-                    color="purple",
-                    linestyle=':',
-                    marker='o',
-                    label="USGS Annual Max")
-
-            ax.plot(data['Year'],
-                    data['Runoff (mm)'],
-                    color="lightgrey",
-                    linestyle=':',
-                    marker='o',
-                    label="Calculated Annual Max")
-
+            col1.subheader('Annual Maxima - USGS Peak Flow vs Daily Calculated')
+            fig6, ax = plt.subplots(figsize=(6, 4))
+            ax.plot(data['Year'], data['Runoff (mm)'], color="purple", linestyle=':', marker='o', label="USGS Annual Max")
+            ax.plot(data['Year'], data['Runoff (mm)'], color="lightgrey", linestyle=':', marker='o', label="Calculated Annual Max")
             ax.legend()
             ax.set_title("Annual Maxima - USGS Peak Flow vs Daily Calculated")
             sns.despine()
-            st.pyplot(fig)
+            col1.pyplot(fig6)
 
-
-              # Plot calculated vs USGS annual max flow values
-            st.subheader('Annual Maxima - USGS Peak Flow vs Daily Calculated')
-            fig, ax = plt.subplots(figsize=(6, 4))
-
-            ax.plot(data['Year'],
-                    data['Rainfall'],
-                    color="purple",
-                    linestyle=':',
-                    marker='o',
-                    label="USGS Annual Max")
-
-            ax.plot(data['Year'],
-                    data['Rainfall'],
-                    color="lightgrey",
-                    linestyle=':',
-                    marker='o',
-                    label="Calculated Annual Max")
-
+            # Plot calculated vs USGS annual max flow values for Rainfall
+            col2.subheader('Annual Maxima - USGS Peak Flow vs Daily Calculated for Rainfall')
+            fig7, ax = plt.subplots(figsize=(6, 4))
+            ax.plot(data['Year'], data['Rainfall'], color="purple", linestyle=':', marker='o', label="USGS Annual Max")
+            ax.plot(data['Year'], data['Rainfall'], color="lightgrey", linestyle=':', marker='o', label="Calculated Annual Max")
             ax.legend()
             ax.set_title("Annual Maxima - USGS Peak Flow vs Daily Calculated")
             sns.despine()
-            st.pyplot(fig)
-
+            col2.pyplot(fig7)
 
             # Print column names
-            st.write(data_copy.columns)
+            col1.write(data_copy.columns)
 
             # Plot your data
-            fig, ax = plt.subplots(figsize=(11,7))
+            col2.subheader('Cumulative Sum & Daily Mean Discharge')
+            fig8, ax = plt.subplots(figsize=(8, 6))
             data['Runoff (mm)'].plot(ax=ax, label = "Cumulative Volume")
 
             # Make the y-axis label, ticks and tick labels match the line color.
@@ -315,27 +291,16 @@ def main():
             ax.tick_params('y', colors='b')
 
             ax2 = ax.twinx()
-
-            ax2.scatter(x=data['Year'], 
-                        y=data['Discharge'], 
-                        marker="o",
-                        s=4, 
-                        color ="purple", label="Daily Mean")
-
+            ax2.scatter(x=data['Year'], y=data['Discharge'], marker="o", s=4, color ="purple", label="Daily Mean")
             ax2.set_ylabel('Stream Discharge (CFS)', color='purple')
             ax2.tick_params('y', colors='purple')
             ax2.set_ylim(0,500)
-
             ax.set_title("Cumulative Sum & Daily Mean Discharge")
             ax.legend()
-
             # Reposition the second legend so it renders under the first legend item
             ax2.legend(loc = "upper left", bbox_to_anchor=(0.0, 0.5))
-
-            fig.tight_layout()
-
-            st.pyplot(fig)
-
+            fig8.tight_layout()
+            col2.pyplot(fig8)
 
         # Split data into train and validation
         Xtr, Xval, Ytr, Yval = train_test_split(data[cols_pred], data[col_target], test_size=0.2, random_state=42)

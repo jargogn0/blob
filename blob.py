@@ -1,4 +1,8 @@
 import streamlit as st
+
+# Must be the first Streamlit command
+st.set_page_config(page_title="Jargoñ Neural Network", page_icon=":spider:", layout="wide")
+
 import pandas as pd
 import numpy as np
 import datetime
@@ -28,9 +32,6 @@ from sklearn.neighbors import KNeighborsClassifier
 #import pandas_bokeh
 from streamlit_lottie import st_lottie 
 import requests
-
-
-st.set_page_config(page_title="Jargoñ Neural Network", page_icon=":spider:", layout="wide")
 
 def load_lottieurl(url):
     r=requests.get(url)

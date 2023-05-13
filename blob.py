@@ -350,17 +350,13 @@ def main():
             model_rmse.append(rmse_val)
             st.write(f"Model: {name}, RMSE on training data: {rmse_tr}, RMSE on validation data: {rmse_val}")
 
-                 # Refresh columns
-            col1, col2 = st.beta_columns(2)
-
-            # Bar plot to compare RMSE of all models
-            col1.subheader('RMSE Comparison Between Models')
-            fig9, ax = plt.subplots(figsize=(6, 4))
+                # Bar plot to compare RMSE of all models
+            fig, ax = plt.subplots()
             ax.bar(model_names, model_rmse)
             ax.set_xlabel("Models")
             ax.set_ylabel("RMSE")
             ax.set_title("RMSE Comparison Between Models")
-            col1.pyplot(fig9)
+            st.pyplot(fig)
 
 
         # Select the best model based on RMSE on validation data

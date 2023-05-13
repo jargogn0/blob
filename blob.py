@@ -49,11 +49,7 @@ with st.container():
         st.write("##")
         st.write(
             """
-            On my YouTube channel I am creating tutorials for people who:
-            - are looking for a way to leverage the power of Python in their day-to-day work.
-            - are struggling with repetitive tasks in Excel and are looking for a way to use Python and VBA.
-            - want to learn Data Analysis & Data Science to perform meaningful and impactful analyses.
-            - are working with Excel and found themselves thinking - "there has to be a better way."
+            This is Hydrologial  Modelling "
 
             If this sounds interesting to you, consider subscribing and turning on the notifications, so you don’t miss any content.
             """
@@ -86,8 +82,8 @@ with st.container():
 
 st.sidebar.info(
     """
-    - Web App URL: <https://streamlit.geemap.org>
-    - GitHub repository: <https://github.com/giswqs/streamlit-geospatial>
+    - Web App URL: <https:www.jargoñ.com/>
+    - GitHub repository: <hhttps://jargogn0-blob-blob-twnpf9.streamlit.app/>
     """
 )
 

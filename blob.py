@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(page_title="Jargoñ Neural Network", page_icon=":spider:", layout="wide")
 st.title("Hydrological Modelling :green[App] :bar_chart:")
 st.subheader("Developed by Jargoñ :spider:")
 import pandas as pd
@@ -30,8 +31,6 @@ from streamlit_lottie import st_lottie
 import requests
 
 
-
-st.set_page_config(page_title="Jargoñ Neural Network", page_icon=":spider:", layout="wide")
 
 def load_lottieurl(url):
     r=requests.get(url)

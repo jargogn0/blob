@@ -3,8 +3,8 @@ import streamlit as st
 # Must be the first Streamlit command
 st.set_page_config(page_title="Jargoñ Neural Network", page_icon=":spider:", layout="wide")
 st.title("Hydrological Modelling :green[App] :bar_chart:")
- st.subheader("Developed by Jargoñ :spider:")
-  st.write("This application accepts a dataset with hydrological data, performs data cleaning and exploration, and builds several predictive models to forecast the 'Discharge' variable.")
+st.subheader("Developed by Jargoñ :spider:")
+st.write("This application accepts a dataset with hydrological data, performs data cleaning and exploration, and builds several predictive models to forecast the 'Discharge' variable.")
 
 
 import pandas as pd

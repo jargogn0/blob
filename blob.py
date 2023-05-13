@@ -90,7 +90,7 @@ st.sidebar.info(
 st.sidebar.title("Contact")
 st.sidebar.info(
     """
-    Qiusheng Wu: <https://wetlands.io>
+    Jargoñ: <https://jargoñ.com>
     [GitHub](https://github.com/jargon0)
     """
 )

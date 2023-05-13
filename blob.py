@@ -24,7 +24,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 #from sklearn.metrics import plot_confusion_matrix
-from sklearn.metrics import plot_roc_curve
+#from sklearn.metrics import plot_roc_curve
 #import pandas_bokeh
 from streamlit_lottie import st_lottie 
 import requests

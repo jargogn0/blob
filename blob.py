@@ -199,21 +199,27 @@ def main():
         #scatter_fig= data.plot_bokeh.scatter("Rainfall", "Discharge")
         #st.bokeh_chart(scatter_fig)
 
+            # Create two columns
+            col1, col2 = st.beta_columns(2)
+
             # Box plot
-            st.subheader('Box Plot of Discharge')
-            fig = plt.figure(figsize=(8, 6))
+            col1.subheader('Box Plot of Discharge')
+            fig1 = plt.figure(figsize=(8, 6))
             sns.boxplot(y=data['Discharge'], palette='viridis')
             sns.despine()
-            st.pyplot(fig)
+            col1.pyplot(fig1)
 
             # Area plot
-            st.subheader('Area Plot of Discharge Over Time')
-            fig = plt.figure(figsize=(8, 6))
+            col2.subheader('Area Plot of Discharge Over Time')
+            fig2 = plt.figure(figsize=(8, 6))
             plt.fill_between(data.index, data['Discharge'], color='mediumseagreen', alpha=0.7)
             plt.xlabel('Time')
             plt.ylabel('Discharge')
             sns.despine()
-            st.pyplot(fig)
+            col2.pyplot(fig2)
+
+            # You can continue this way for other plots, creating new columns as needed
+
 
             # Correlation heatmap (if you have many numerical variables)
             st.subheader('Heatmap of Variable Correlations')

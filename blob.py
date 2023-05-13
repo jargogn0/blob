@@ -100,7 +100,6 @@ st.sidebar.info(
 )
 
 def main():
-    st.title("Hydrological Modelling :green[App] :bar_chart:")
     st.subheader("Model 2: Predict Runoff :spider:")
     st.write("This application accepts a dataset with hydrological data, performs data cleaning and exploration, and builds several predictive models to forecast the 'Discharge' variable.")
 

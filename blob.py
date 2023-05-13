@@ -102,6 +102,174 @@ st.sidebar.info(
     """
 )
 
+
+
+
+st.subheader('Model 2 - Predicting Next Rainfall and Flood Risk')
+
+uploaded_file_2 = st.file_uploader("Choose a new TRAINING csv or Excel file for MODEL 2", type=['csv', 'xlsx'])
+
+if uploaded_file_2 is not None:
+    try:
+        data = pd.read_csv(uploaded_file_2)
+    except Exception as e:
+        data = pd.read_excel(uploaded_file_2)
+
+    st.write("Training data for Model 2:")
+    st.write(data.head())
+
+else:
+    data = pd.read_excel('rain_data.xlsx')
+    st.write("Using default training data for Model 2:")
+    st.write(data.head())
+
+# Upload the data for Model 2
+file_upload_2 = st.file_uploader("Upload data for Model 2", type=["csv", "xlsx"])
+
+if file_upload_2:
+    if file_upload_2.type == "text/csv":
+        data = pd.read_csv(file_upload_2)
+    elif file_upload_2.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        data = pd.read_excel(file_upload_2)
+    else:
+        st.write("Please upload a valid file format.")
+
+# Add a button to run Model 2
+if 'run_model_2' not in st.session_state:
+    st.session_state['run_model_2'] = False
+
+if st.button("Run Model2"):
+    st.session_state.run_model_2 = True
+
+if st.session_state.run_model_2 and file_upload_2:
+    # Define input features and target variable
+    features = ['Rainfall_mm', 'Temperature_C', 'Wind_Speed_kmph', 'Elevation_m', 'Population_Density', 'Flood_History_Count']
+    target = 'Flood_Status'
+
+    # Replace non-numeric values in numeric columns
+    numeric_cols = ['Rainfall_mm', 'Temperature_C', 'Wind_Speed_kmph', 'Elevation_m', 'Population_Density', 'Flood_History_Count']
+    for col in numeric_cols:
+        data[col] = pd.to_numeric(data[col], errors='coerce')
+
+    # Drop rows with NaN values
+    data = data.dropna()
+
+    st.line_chart(data.Rainfall_mm)
+    st.line_chart(data.Temperature_C)
+
+    # Prepare the dataset, excluding the 'Timestamp' column
+    X = data[features].copy()
+    X = X.drop(['Timestamp'], errors='ignore', axis=1)
+
+    y = data[target]
+
+    # Encode the target variable (Flood_Status) as binary (0: No, 1: Yes)
+    y = y.map({'No': 0, 'Yes': 1})
+    st.write("Value counts for target variable:")
+    st.write(y.value_counts())
+
+
+    # Split the dataset into training, validation, and test sets
+    X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+    # Standardize the input features
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_val = scaler.transform(X_val)
+    X_test = scaler.transform(X_test)
+
+    # Add session state for model selection
+    if 'model_selection' not in st.session_state:
+        st.session_state['model_selection'] = 'Random Forest'
+    model_options = ('Random Forest', 'Logistic Regression', 'Support Vector Machine', 'Decision Tree', 'K-Nearest Neighbors')
+    model_selection = st.selectbox(
+        'Select a model:',
+        model_options,
+    index=model_options.index(st.session_state['model_selection'])
+    )
+    st.session_state['model_selection'] = model_selection
+
+    # Train the selected model
+    if model_selection == 'Random Forest':
+        clf = RandomForestClassifier(n_estimators=100, random_state=42)
+    elif model_selection == 'Logistic Regression':
+        clf = LogisticRegression(random_state=42)
+    elif model_selection == 'Support Vector Machine':
+        clf = SVC(random_state=42)
+    elif model_selection == 'Decision Tree':
+        clf = DecisionTreeClassifier(random_state=42)
+    elif model_selection == 'K-Nearest Neighbors':
+        clf = KNeighborsClassifier()
+
+    clf.fit(X_train, y_train)
+
+    # Validate the model
+    y_val_pred = clf.predict(X_val)
+    st.write("Validation set results:")
+    st.write(classification_report(y_val, y_val_pred))
+    st.write(confusion_matrix(y_val, y_val_pred))
+
+    # Test the model
+    y_test_pred = clf.predict(X_test)
+    st.write("Test set results:")
+    st.write(classification_report(y_test, y_test_pred))
+    st.write(confusion_matrix(y_test, y_test_pred))
+
+    # Calculate and display metrics
+    st.write("Model 2 Performance Metrics:")
+    st.write(classification_report(y_test, y_test_pred))
+
+    # Calculate and display feature importances
+    if hasattr(clf, 'feature_importances_'):
+        feature_importances = pd.DataFrame(clf.feature_importances_, index = X.columns, columns=['importance']).sort_values('importance', ascending=False)
+        st.write("Model 2 Feature Importances:")
+        st.write(feature_importances)
+
+    # Generate a download link for the prediction results
+    output = io.BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    data.to_excel(writer, sheet_name='Sheet1')
+    writer.close()
+
+    
+    
+    import altair as alt
+
+    #data['Timestamp'] = pd.to_datetime(data['Timestamp'])
+    line_chart = alt.Chart(data).mark_line().encode(
+        x='Timestamp:T',
+        y='Rainfall_mm:Q',
+        tooltip=['Timestamp', 'Rainfall_mm']
+    ).interactive().properties(
+        title='Rainfall over Time'
+    )
+
+    st.altair_chart(line_chart, use_container_width=True)
+
+
+    if st.session_state.run_model_2 and file_upload_2:
+        # Plot confusion matrix
+        fig, ax = plt.subplots()
+        plot_confusion_matrix(clf, X_test, y_test, ax=ax, cmap='Blues')
+        ax.set_title(f"Model 2 ({st.session_state['model_selection']}) - Confusion Matrix")
+        st.pyplot(fig)
+
+        # Plot ROC curve
+        fig, ax = plt.subplots()
+        plot_roc_curve(clf, X_test, y_test, ax=ax)
+        ax.set_title(f"Model 2 ({st.session_state['model_selection']}) - ROC Curve")
+        st.pyplot(fig)
+
+    excel_data = output.getvalue()
+    b64 = base64.b64encode(excel_data).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="model_predictions.xlsx">Download MODEL Predictions Excel File</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
+
+else:
+    st.write("Please upload data before running Model 2.")
+
 def main():
     st.title("Hydrological Modelling :green[App] :bar_chart:")
     st.subheader("Developed by Jargoñ :spider:")
@@ -434,171 +602,6 @@ def get_table_download_link(df, filename):
     return href
 
 
-
-st.subheader('Model 2 - Predicting Next Rainfall and Flood Risk')
-
-uploaded_file_2 = st.file_uploader("Choose a new TRAINING csv or Excel file for MODEL 2", type=['csv', 'xlsx'])
-
-if uploaded_file_2 is not None:
-    try:
-        data = pd.read_csv(uploaded_file_2)
-    except Exception as e:
-        data = pd.read_excel(uploaded_file_2)
-
-    st.write("Training data for Model 2:")
-    st.write(data.head())
-
-else:
-    data = pd.read_excel('rain_data.xlsx')
-    st.write("Using default training data for Model 2:")
-    st.write(data.head())
-
-# Upload the data for Model 2
-file_upload_2 = st.file_uploader("Upload data for Model 2", type=["csv", "xlsx"])
-
-if file_upload_2:
-    if file_upload_2.type == "text/csv":
-        data = pd.read_csv(file_upload_2)
-    elif file_upload_2.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        data = pd.read_excel(file_upload_2)
-    else:
-        st.write("Please upload a valid file format.")
-
-# Add a button to run Model 2
-if 'run_model_2' not in st.session_state:
-    st.session_state['run_model_2'] = False
-
-if st.button("Run Model2"):
-    st.session_state.run_model_2 = True
-
-if st.session_state.run_model_2 and file_upload_2:
-    # Define input features and target variable
-    features = ['Rainfall_mm', 'Temperature_C', 'Wind_Speed_kmph', 'Elevation_m', 'Population_Density', 'Flood_History_Count']
-    target = 'Flood_Status'
-
-    # Replace non-numeric values in numeric columns
-    numeric_cols = ['Rainfall_mm', 'Temperature_C', 'Wind_Speed_kmph', 'Elevation_m', 'Population_Density', 'Flood_History_Count']
-    for col in numeric_cols:
-        data[col] = pd.to_numeric(data[col], errors='coerce')
-
-    # Drop rows with NaN values
-    data = data.dropna()
-
-    st.line_chart(data.Rainfall_mm)
-    st.line_chart(data.Temperature_C)
-
-    # Prepare the dataset, excluding the 'Timestamp' column
-    X = data[features].copy()
-    X = X.drop(['Timestamp'], errors='ignore', axis=1)
-
-    y = data[target]
-
-    # Encode the target variable (Flood_Status) as binary (0: No, 1: Yes)
-    y = y.map({'No': 0, 'Yes': 1})
-    st.write("Value counts for target variable:")
-    st.write(y.value_counts())
-
-
-    # Split the dataset into training, validation, and test sets
-    X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
-    X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
-
-    # Standardize the input features
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_val = scaler.transform(X_val)
-    X_test = scaler.transform(X_test)
-
-    # Add session state for model selection
-    if 'model_selection' not in st.session_state:
-        st.session_state['model_selection'] = 'Random Forest'
-    model_options = ('Random Forest', 'Logistic Regression', 'Support Vector Machine', 'Decision Tree', 'K-Nearest Neighbors')
-    model_selection = st.selectbox(
-        'Select a model:',
-        model_options,
-    index=model_options.index(st.session_state['model_selection'])
-    )
-    st.session_state['model_selection'] = model_selection
-
-    # Train the selected model
-    if model_selection == 'Random Forest':
-        clf = RandomForestClassifier(n_estimators=100, random_state=42)
-    elif model_selection == 'Logistic Regression':
-        clf = LogisticRegression(random_state=42)
-    elif model_selection == 'Support Vector Machine':
-        clf = SVC(random_state=42)
-    elif model_selection == 'Decision Tree':
-        clf = DecisionTreeClassifier(random_state=42)
-    elif model_selection == 'K-Nearest Neighbors':
-        clf = KNeighborsClassifier()
-
-    clf.fit(X_train, y_train)
-
-    # Validate the model
-    y_val_pred = clf.predict(X_val)
-    st.write("Validation set results:")
-    st.write(classification_report(y_val, y_val_pred))
-    st.write(confusion_matrix(y_val, y_val_pred))
-
-    # Test the model
-    y_test_pred = clf.predict(X_test)
-    st.write("Test set results:")
-    st.write(classification_report(y_test, y_test_pred))
-    st.write(confusion_matrix(y_test, y_test_pred))
-
-    # Calculate and display metrics
-    st.write("Model 2 Performance Metrics:")
-    st.write(classification_report(y_test, y_test_pred))
-
-    # Calculate and display feature importances
-    if hasattr(clf, 'feature_importances_'):
-        feature_importances = pd.DataFrame(clf.feature_importances_, index = X.columns, columns=['importance']).sort_values('importance', ascending=False)
-        st.write("Model 2 Feature Importances:")
-        st.write(feature_importances)
-
-    # Generate a download link for the prediction results
-    output = io.BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    data.to_excel(writer, sheet_name='Sheet1')
-    writer.close()
-
-    
-    
-    import altair as alt
-
-    #data['Timestamp'] = pd.to_datetime(data['Timestamp'])
-    line_chart = alt.Chart(data).mark_line().encode(
-        x='Timestamp:T',
-        y='Rainfall_mm:Q',
-        tooltip=['Timestamp', 'Rainfall_mm']
-    ).interactive().properties(
-        title='Rainfall over Time'
-    )
-
-    st.altair_chart(line_chart, use_container_width=True)
-
-
-    if st.session_state.run_model_2 and file_upload_2:
-        # Plot confusion matrix
-        fig, ax = plt.subplots()
-        plot_confusion_matrix(clf, X_test, y_test, ax=ax, cmap='Blues')
-        ax.set_title(f"Model 2 ({st.session_state['model_selection']}) - Confusion Matrix")
-        st.pyplot(fig)
-
-        # Plot ROC curve
-        fig, ax = plt.subplots()
-        plot_roc_curve(clf, X_test, y_test, ax=ax)
-        ax.set_title(f"Model 2 ({st.session_state['model_selection']}) - ROC Curve")
-        st.pyplot(fig)
-
-    excel_data = output.getvalue()
-    b64 = base64.b64encode(excel_data).decode()  # some strings <-> bytes conversions necessary here
-    href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="model_predictions.xlsx">Download MODEL Predictions Excel File</a>'
-    st.markdown(href, unsafe_allow_html=True)
-
-
-else:
-    st.write("Please upload data before running Model 2.")
 
 if __name__ == "__main__":
     main()

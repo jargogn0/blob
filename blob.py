@@ -199,50 +199,55 @@ def main():
         #scatter_fig= data.plot_bokeh.scatter("Rainfall", "Discharge")
         #st.bokeh_chart(scatter_fig)
 
-            # Create two columns
-            col1, col2 = st.beta_columns(2)
+                   # Create two columns
+        col1, col2 = st.beta_columns(2)
 
-            # Box plot
-            col1.subheader('Box Plot of Discharge')
-            fig1 = plt.figure(figsize=(8, 6))
-            sns.boxplot(y=data['Discharge'], palette='viridis')
-            sns.despine()
-            col1.pyplot(fig1)
+        # Box plot
+        col1.subheader('Box Plot of Discharge')
+        fig1 = plt.figure(figsize=(8, 6))
+        sns.boxplot(y=data['Discharge'], palette='viridis')
+        sns.despine()
+        col1.pyplot(fig1)
 
-            # Area plot
-            col2.subheader('Area Plot of Discharge Over Time')
-            fig2 = plt.figure(figsize=(8, 6))
-            plt.fill_between(data.index, data['Discharge'], color='mediumseagreen', alpha=0.7)
-            plt.xlabel('Time')
-            plt.ylabel('Discharge')
-            sns.despine()
-            col2.pyplot(fig2)
+        # Area plot
+        col2.subheader('Area Plot of Discharge Over Time')
+        fig2 = plt.figure(figsize=(8, 6))
+        plt.fill_between(data.index, data['Discharge'], color='mediumseagreen', alpha=0.7)
+        plt.xlabel('Time')
+        plt.ylabel('Discharge')
+        sns.despine()
+        col2.pyplot(fig2)
 
-            # You can continue this way for other plots, creating new columns as needed
+        # Correlation heatmap (if you have many numerical variables)
+        col1.subheader('Heatmap of Variable Correlations')
+        fig3 = plt.figure(figsize=(8, 6))
+        sns.heatmap(data.corr(), annot=True, fmt=".2f", cmap='coolwarm', linewidths=1)
+        col1.pyplot(fig3)
 
+        # Line Plot of ETP, Rainfall, and Discharge Over Time
+        col2.subheader('Line Plot of ETP, Rainfall, and Discharge Over Time')
+        fig4, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(data.index, data['Rainfall'], label='Rainfall', color='steelblue')
+        ax.plot(data.index, data['Runoff (mm)'], label='Runoff', color='darkorange')
+        ax.legend()
+        sns.despine()
+        col2.pyplot(fig4)
 
-            # Correlation heatmap (if you have many numerical variables)
-            st.subheader('Heatmap of Variable Correlations')
-            fig = plt.figure(figsize=(8, 6))
-            sns.heatmap(data.corr(), annot=True, fmt=".2f", cmap='coolwarm', linewidths=1)
-            st.pyplot(fig)
+        # Refresh columns
+        col1, col2 = st.beta_columns(2)
 
-            st.subheader('Line Plot of ETP, Rainfall, and Discharge Over Time')
-            fig, ax = plt.subplots(figsize=(8, 6))
-            ax.plot(data.index, data['Rainfall'], label='Rainfall', color='steelblue')
-            ax.plot(data.index, data['Runoff (mm)'], label='Runoff', color='darkorange')
-            ax.legend()
-            sns.despine()
-            st.pyplot(fig)
+        # Area Plot of ETP, Rainfall, and Discharge Over Time
+        col1.subheader('Area Plot of ETP, Rainfall, and Discharge Over Time')
+        fig5, ax = plt.subplots(figsize=(8, 6))
+        #ax.fill_between(data.index, data['ETP'], label='ETP', color='firebrick', alpha=0.5)
+        ax.fill_between(data.index, data['Rainfall'], label='Rainfall', color='steelblue', alpha=0.5)
+        ax.fill_between(data.index, data['Runoff (mm)'], label='Runoff', color='darkorange', alpha=0.5)
+        ax.legend()
+        sns.despine()
+        col1.pyplot(fig5)
 
-            st.subheader('Area Plot of ETP, Rainfall, and Discharge Over Time')
-            fig, ax = plt.subplots(figsize=(8, 6))
-            #ax.fill_between(data.index, data['ETP'], label='ETP', color='firebrick', alpha=0.5)
-            ax.fill_between(data.index, data['Rainfall'], label='Rainfall', color='steelblue', alpha=0.5)
-            ax.fill_between(data.index, data['Runoff (mm)'], label='Runoff', color='darkorange', alpha=0.5)
-            ax.legend()
-            sns.despine()
-            st.pyplot(fig)
+        # Continue this way for the rest of your plots...
+
 
             st.write(data_copy.head())
             st.write(data.head())

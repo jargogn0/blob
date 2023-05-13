@@ -279,7 +279,7 @@ def main():
             col2.pyplot(fig7)
 
             # Print column names
-            write(data_copy.columns)
+            col1.write(data_copy.columns)
 
             # Plot your data
             col2.subheader('Cumulative Sum & Daily Mean Discharge')

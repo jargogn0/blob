@@ -548,10 +548,10 @@ if st.session_state.run_model_1 and file_upload_2:
 
     if st.session_state.run_model_1 and file_upload_2:
         # Plot confusion matrix
-        fig, ax = plt.subplots()
-        plot_confusion_matrix(clf, X_test, y_test, ax=ax, cmap='Blues')
-        ax.set_title(f"Model 1 ({st.session_state['model_selection']}) - Confusion Matrix")
-        st.pyplot(fig)
+        #fig, ax = plt.subplots()
+        #plot_confusion_matrix(clf, X_test, y_test, ax=ax, cmap='Blues')
+        #ax.set_title(f"Model 1 ({st.session_state['model_selection']}) - Confusion Matrix")
+        #st.pyplot(fig)
 
         # Plot ROC curve
         fig, ax = plt.subplots()

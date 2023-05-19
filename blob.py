@@ -548,16 +548,16 @@ if st.session_state.run_model_1 and file_upload_2:
 
     if st.session_state.run_model_1 and file_upload_2:
         # Plot confusion matrix
-        #fig, ax = plt.subplots()
-        #plot_confusion_matrix(clf, X_test, y_test, ax=ax, cmap='Blues')
-        #ax.set_title(f"Model 1 ({st.session_state['model_selection']}) - Confusion Matrix")
-        #st.pyplot(fig)
+        fig, ax = plt.subplots()
+        plot_confusion_matrix(clf, X_test, y_test, ax=ax, cmap='Blues')
+        ax.set_title(f"Model 1 ({st.session_state['model_selection']}) - Confusion Matrix")
+        st.pyplot(fig)
 
         # Plot ROC curve
-        #fig, ax = plt.subplots()
-        #plot_roc_curve(clf, X_test, y_test, ax=ax)
-        #ax.set_title(f"Model 1 ({st.session_state['model_selection']}) - ROC Curve")
-        #st.pyplot(fig)
+        fig, ax = plt.subplots()
+        plot_roc_curve(clf, X_test, y_test, ax=ax)
+        ax.set_title(f"Model 1 ({st.session_state['model_selection']}) - ROC Curve")
+        st.pyplot(fig)
 
     excel_data = output.getvalue()
     b64 = base64.b64encode(excel_data).decode()  # some strings <-> bytes conversions necessary here
